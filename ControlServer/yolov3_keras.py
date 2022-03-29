@@ -9,9 +9,9 @@ import time
 import tensorflow as tf
 
 from keras.backend.tensorflow_backend import set_session
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.7
-set_session(tf.Session(config=config))
+set_session(tf.compat.v1.Session(config=config))
 
 labelsCoco = [
             "person",

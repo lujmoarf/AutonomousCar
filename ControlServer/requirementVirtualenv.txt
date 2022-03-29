@@ -3,7 +3,7 @@ astor==0.8.1
 click==7.1.1
 cycler==0.10.0
 Flask==1.1.2
-gast==0.2.2
+gast==0.3.3
 gevent==20.5.0
 google-pasta==0.2.0
 greenlet==0.4.15
@@ -11,7 +11,7 @@ grpcio==1.28.1
 h5py==2.10.0
 itsdangerous==1.1.0
 Jinja2==2.11.1
-Keras==2.8.0
+Keras==2.2.4
 Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.2
 kiwisolver==1.2.0
@@ -31,9 +31,9 @@ python-dateutil==2.8.1
 PyYAML==5.3.1
 scipy==1.4.1
 six==1.14.0
-tensorboard==2.8.0
-tensorflow-estimator==1.15.1
-tensorflow-gpu==2.8.0
+tensorboard==2.2.0
+tensorflow-estimator==2.2.0
+tensorflow-gpu==2.2.0
 termcolor==1.1.0
 websocket==0.2.1
 websocket-client==0.57.0
