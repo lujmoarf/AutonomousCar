@@ -167,7 +167,7 @@ class yolo3_keras_model():
 #       break
 
 def main():
-  model = yolo3_keras_model('./yolov3.h5')
+  model = yolo3_keras_model('./test/yolov3.h5')
 
   cap = cv2.VideoCapture(0)
   ret, img = cap.read()

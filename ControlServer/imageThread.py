@@ -15,7 +15,7 @@ from configparser import ConfigParser
 import time
 from websocket import create_connection
 
-udpServerAddr = ('192.168.1.26', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
+udpServerAddr = ('192.168.1.216', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
 
 RECV_BUFF_SIZE = 8192*8
 HEADER_SIZE = 4
