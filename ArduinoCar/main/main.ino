@@ -63,6 +63,7 @@ bool reqRight = false;
 bool reqFw = false;
 bool reqBw = false;
 bool motor_stop = true;
+bool old_motor_stop = true;
 /**********************************************
  * MOTOR DEFINITION
  **********************************************/
@@ -79,20 +80,17 @@ int enable2Pin = 4;
 int standbyPin = 2;
 
 
-  // these constants are used to allow you to make your motor configuration 
-  // line up with function names like forward.  Value can be 1 or -1
-  const int offsetA = 1;
-  const int offsetB = 1;
-  
-  // Initializing motors.  The library will allow you to initialize as many
-  // motors as you have memory for.  If you are using functions like forward
-  // that take 2 motors as arguements you can either write new functions or
-  // call the function more than once.
-  Motor motor1 = Motor(motor1Pin1, motor1Pin2, enable1Pin, offsetA, standbyPin);
-  Motor motor2 = Motor(motor2Pin1, motor2Pin2, enable2Pin, offsetB, standbyPin);
+// these constants are used to allow you to make your motor configuration 
+// line up with function names like forward.  Value can be 1 or -1
+const int offsetA = 1;
+const int offsetB = 1;
 
-
-
+// Initializing motors.  The library will allow you to initialize as many
+// motors as you have memory for.  If you are using functions like forward
+// that take 2 motors as arguements you can either write new functions or
+// call the function more than once.
+Motor motor1 = Motor(motor1Pin1, motor1Pin2, enable1Pin, offsetA, standbyPin);
+Motor motor2 = Motor(motor2Pin1, motor2Pin2, enable2Pin, offsetB, standbyPin);
 
 // Setting PWM properties for motor control
 const int freq = 30000;
@@ -104,7 +102,15 @@ int dutyCycle = 250;
 // if direction = 0 -> forward
 // if direction = 1 -> backward
 int direction = 0;
+int old_direction = 0;
 
+//if turn == 0 // no turn
+//if turn == 1 // right turn
+//if turn ==2 // left turn
+int turn = 0;
+int old_turn = 0;
+String car_status = "";
+String old_car_status = "";
 
 /******************************************************
  * Robot  config
@@ -185,10 +191,10 @@ void processData(){
     }else if(strPackage.equals("rioff")){
       reqRight = false;
     }else if(strPackage.equals("mFWon")){
-      distance = 50;
+      //distance = 50;
       direction = 0;
     }else if(strPackage.equals("mBWon")){
-      distance = 50;
+      //distance = 50;
       direction = 1;
     }else if(strPackage.equals("stopon")){
       motor_stop = true;
@@ -317,15 +323,39 @@ void loop(void) {
     if (motor_stop == false){
       //mf(distance);
       if (direction == 0){
-          move_forward();
-          Serial.println("moving forward");
+          if (turn == 0){
+            move_forward();
+            car_status = "moving forward";
+          } else if (turn == 1){
+            turn_forward_right();
+            car_status = "turn forward right";
+          } else if (turn == 2){
+            turn_forward_left();
+            car_status = "turn forward left";
+          }
       } else if (direction == 1){
+        if (turn == 0){
           move_backward();
-          Serial.println("moving backward");
+          car_status = "moving backward";
+        } else if (turn == 1){
+          turn_backward_right();
+          car_status = "turn backward right";
+        } else if (turn == 2){
+          turn_backward_left();
+          car_status = "turn backward left";
+        }
       }
-    }else {
+
+      
+      
+    } else {
       stop_motors();
-      Serial.println("stop");
+      car_status = "stop";
+    }
+
+    if (old_car_status != car_status){
+      Serial.println(car_status);
+      old_car_status = car_status;
     }
 
     

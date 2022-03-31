@@ -62,8 +62,8 @@ class Ui_MainWindow(object):
 #Move the robot
         self.mvfwButton = QtWidgets.QPushButton(self.centralwidget)
         self.mvfwButton.setGeometry(QtCore.QRect(440, 700, 51, 41))
-        self.mvfwButton.setAutoRepeat(False)
-        self.mvfwButton.setAutoRepeatInterval(10)
+#        self.mvfwButton.setAutoRepeat(True)
+#        self.mvfwButton.setAutoRepeatInterval(10)
         self.mvfwButton.setObjectName("mvfwButton")
         self.mvbwButton = QtWidgets.QPushButton(self.centralwidget)
         self.mvbwButton.setGeometry(QtCore.QRect(440, 820, 51, 41))
@@ -111,8 +111,9 @@ class Ui_MainWindow(object):
         self.mvbwButton.toggled.connect(self.buttontoggled)
         self.mvleftButton.setCheckable(True)
         self.mvleftButton.toggled.connect(self.buttontoggled)
-        self.mvrightButton.setCheckable(True)
+        self.mvrightButton.setCheckable(False)
         self.mvrightButton.toggled.connect(self.buttontoggled)
+#        self.mvrightButton.keyPressEvent.connect(self.onkeyPressEvent)
         self.stopButton.setCheckable(True)
         self.stopButton.toggled.connect(self.buttontoggled)
 
@@ -181,8 +182,6 @@ class Ui_MainWindow(object):
         self.stopButton.setText(_translate("MainWindow", "STOP"))
         self.stopButton.setShortcut(_translate("MainWindow", "Q"))
 
-
-
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Image View</p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">FPS: </span></p></body></html>"))
     
@@ -215,8 +214,8 @@ class Ui_MainWindow(object):
             self.stopButton.setChecked(False)
 
 
-
           self.statusBar().showMessage(sender.text() + ' is pressed')
+
         else:
           if sender.text() == 'STREAM':
             print('STREAM PAUSE')
@@ -241,34 +240,32 @@ class Ui_MainWindow(object):
 
     def onkeyPressEvent(self,event):
         if event.key() == ord('I') and not event.isAutoRepeat():
-          
-          self.fwButton.setChecked(True)
-        
+          self.fwButton.setChecked(True);
+          print('I is pressed');
         if event.key() == ord('K') and not event.isAutoRepeat():
           self.bwButton.setChecked(True)
-        
         if event.key() == ord('J') and not event.isAutoRepeat():
           self.leftButton.setChecked(True)
-
         if event.key() == ord('L') and not event.isAutoRepeat():
           self.rightButton.setChecked(True)
-
+        if event.key() == ord('D'):
+          print('D pressed');
         if not event.isAutoRepeat():
+          print(event.key())
+        else:
           print(event.key())
 
     def onkeyReleaseEvent(self, event):
         if event.key() == ord('I') and not event.isAutoRepeat():
           self.fwButton.setChecked(False)
-        
         if event.key() == ord('K') and not event.isAutoRepeat():
           self.bwButton.setChecked(False)
-        
         if event.key() == ord('J') and not event.isAutoRepeat():
           self.leftButton.setChecked(False)
-
         if event.key() == ord('L') and not event.isAutoRepeat():
           self.rightButton.setChecked(False)
-
+        if event.key() == ord('D') and not event.isAutoRepeat():
+          print('D released');
         if not event.isAutoRepeat():
           print(event.key())
 
