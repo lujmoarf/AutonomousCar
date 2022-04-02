@@ -58,8 +58,11 @@ class ImageThread(QThread):
 
   def requestMotorStop(self, val):
     while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'stopon', udpServerAddr)
-      self.initRequestCnt -= 1
+        if val:
+            self.udp_socket.sendto(b'stopon', udpServerAddr)
+        else:
+            self.udp_socket.sendto(b'stopoff', udpServerAddr)
+        self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
   def requestMotorGo(self, val):
@@ -70,26 +73,38 @@ class ImageThread(QThread):
 
   def requestMotorFW(self, val):
     while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'mFWon', udpServerAddr)
-      self.initRequestCnt -= 1
+        if val:
+            self.udp_socket.sendto(b'mFWon', udpServerAddr)
+        else:
+            self.udp_socket.sendto(b'mFWoff', udpServerAddr)
+        self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
   def requestMotorBW(self, val):
     while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'mBWon', udpServerAddr)
-      self.initRequestCnt -= 1
+        if val:
+            self.udp_socket.sendto(b'mBWon', udpServerAddr)
+        else:
+            self.udp_socket.sendto(b'mBWoff', udpServerAddr)
+        self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
-  def requestMotorleft(self, val):
+  def requestMotorLeft(self, val):
     while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'mLFon', udpServerAddr)
-      self.initRequestCnt -= 1
+        if val:
+            self.udp_socket.sendto(b'mLFon', udpServerAddr)
+        else:
+            self.udp_socket.sendto(b'mLFoff', udpServerAddr)
+        self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
   def requestMotorRight(self, val):
     while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'mRGon', udpServerAddr)
-      self.initRequestCnt -= 1
+        if val:
+            self.udp_socket.sendto(b'mRGon', udpServerAddr)
+        else:
+            self.udp_socket.sendto(b'mRGoff', udpServerAddr)
+        self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
 

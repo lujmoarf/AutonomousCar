@@ -191,15 +191,33 @@ void processData(){
     }else if(strPackage.equals("rioff")){
       reqRight = false;
     }else if(strPackage.equals("mFWon")){
-      //distance = 50;
+      motor_stop = false;
+      direction = 0;
+    }else if(strPackage.equals("mFWoff")){
+      motor_stop = true;
       direction = 0;
     }else if(strPackage.equals("mBWon")){
-      //distance = 50;
+      motor_stop = false;
       direction = 1;
+    }else if(strPackage.equals("mBWoff")){
+      motor_stop = true;
+      direction = 1;
+    }else if(strPackage.equals("mRGon")){
+      motor_stop = false;
+      turn = 1;
+    }else if(strPackage.equals("mRGoff")){
+      motor_stop = true;
+      turn = 0;
+    }else if(strPackage.equals("mLFon")){
+      motor_stop = false;
+      turn = 2;
+    }else if(strPackage.equals("mLFoff")){
+      motor_stop = true;
+      turn = 0;      
     }else if(strPackage.equals("stopon")){
       motor_stop = true;
     }else if(strPackage.equals("stopoff")){
-      motor_stop = false;
+      //motor_stop = false;
     }
   }
   memset(packetBuffer, 0, RECVLENGTH);

@@ -13,8 +13,6 @@ void setup_motor(){
   // call the function more than once.
   Motor motor1 = Motor(motor1Pin1, motor1Pin2, enable1Pin, offsetA, standbyPin);
   Motor motor2 = Motor(motor2Pin1, motor2Pin2, enable2Pin, offsetB, standbyPin);
-//  motor1 = Motor(motor1Pin1, motor1Pin2, enable1Pin, offsetA, standbyPin);
-//  motor2 = Motor(motor2Pin1, motor2Pin2, enable2Pin, offsetB, standbyPin);
 }
 
 // Function to convert from centimeters to steps
@@ -115,90 +113,18 @@ void move_backward() {
   //Serial.println(dutyCycle);
 }
 
-void turn_forward_left() {
-  //// STOP M1 and MOVE M2 forward
-  ////motor1
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor1Pin1, LOW);
-  //digitalWrite(motor1Pin2, LOW);
-  
-  ////motor2
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor2Pin1, HIGH);
-  //digitalWrite(motor2Pin2, LOW);  
-  
-////Serial.print("Turning forward left with duty cycle: ");
-//  Serial.println(dutyCycle);
-
-  //delay(500);
-  //move_forward();
-  
-  left(motor1, motor2, 100);
+void turn_forward_left() { 
+  left(motor1, motor2, 150);
 }
 
 void turn_backward_left() {
-  //// STOP M1 and MOVE M2 backward
-
-  ////motor1
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor1Pin1, LOW);
-  //digitalWrite(motor1Pin2, LOW);
-  
-  ////motor2
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor2Pin1, LOW);
-  //digitalWrite(motor2Pin2, HIGH);  
-  
- //// Serial.print("Turning backward left with duty cycle: ");
-  //Serial.println(dutyCycle);
-
-  //delay(500);
-  //move_backward();
-  left(motor1, motor2, -100);
+  left(motor1, motor2, -150);
 }
 
 void turn_forward_right() {
-//  // STOP M2 and MOVE M1 forward
-
-//  //motor1
-//  ledcWrite(pwmChannel, dutyCycle);
-//  digitalWrite(motor1Pin1, HIGH);
-//  digitalWrite(motor1Pin2, LOW);
-  
-//  //motor2
-//  ledcWrite(pwmChannel, dutyCycle);
-//  digitalWrite(motor2Pin1, LOW);
-//  digitalWrite(motor2Pin2, LOW);  
-  
-//  Serial.print("Turning forwardRight with duty cycle: ");
-//  Serial.println(dutyCycle);
-
-//  delay(500);
-//  move_forward();
-  right(motor1, motor2, 100);
-
-
+  right(motor1, motor2, 150);
 }
 
 void turn_backward_right() {
-//  // STOP M2 and MOVE M1 backward
-
-//  //motor1
-//  ledcWrite(pwmChannel, dutyCycle);
-//  digitalWrite(motor1Pin1, LOW);
-//  digitalWrite(motor1Pin2, HIGH);
-  
-//  //motor2
-//  ledcWrite(pwmChannel, dutyCycle);
-//  digitalWrite(motor2Pin1, LOW);
-//  digitalWrite(motor2Pin2, LOW);  
-  
-//  Serial.print("Turning backward Right with duty cycle: ");
-//  Serial.println(dutyCycle);
-
-//  delay(500);
-//  move_backward();
-
-right(motor1, motor2, -100);
-  
+  right(motor1, motor2, -150);
 }

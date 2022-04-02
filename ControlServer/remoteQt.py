@@ -21,7 +21,7 @@ import time
 DEBUG = False
 
 class Ui_MainWindow(object):
-
+    
     def __init__(self):
         self.setupUi(self)
 
@@ -111,9 +111,9 @@ class Ui_MainWindow(object):
         self.mvbwButton.toggled.connect(self.buttontoggled)
         self.mvleftButton.setCheckable(True)
         self.mvleftButton.toggled.connect(self.buttontoggled)
-        self.mvrightButton.setCheckable(False)
+        self.mvrightButton.setCheckable(True)
         self.mvrightButton.toggled.connect(self.buttontoggled)
-#        self.mvrightButton.keyPressEvent.connect(self.onkeyPressEvent)
+#        self.mvrightButton.pressed.connect(self.onkeyPressEvent)
         self.stopButton.setCheckable(True)
         self.stopButton.toggled.connect(self.buttontoggled)
 
@@ -172,15 +172,15 @@ class Ui_MainWindow(object):
 
 # Motors control
         self.mvfwButton.setText(_translate("MainWindow", "MVFW"))
-        self.mvfwButton.setShortcut(_translate("MainWindow", "W"))
+#        self.mvfwButton.setShortcut(_translate("MainWindow", "W"))
         self.mvbwButton.setText(_translate("MainWindow", "MVBW"))
-        self.mvbwButton.setShortcut(_translate("MainWindow", "S"))
+#        self.mvbwButton.setShortcut(_translate("MainWindow", "S"))
         self.mvleftButton.setText(_translate("MainWindow", "MVLEFT"))
-        self.mvleftButton.setShortcut(_translate("MainWindow", "A"))
+#        self.mvleftButton.setShortcut(_translate("MainWindow", "A"))
         self.mvrightButton.setText(_translate("MainWindow", "MVRIGHT"))
-        self.mvrightButton.setShortcut(_translate("MainWindow", "D"))
+ #       self.mvrightButton.setShortcut(_translate("MainWindow", "D"))
         self.stopButton.setText(_translate("MainWindow", "STOP"))
-        self.stopButton.setShortcut(_translate("MainWindow", "Q"))
+#        self.stopButton.setShortcut(_translate("MainWindow", "Q"))
 
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Image View</p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">FPS: </span></p></body></html>"))
@@ -237,6 +237,33 @@ class Ui_MainWindow(object):
             self.stopButton.setChecked(True)
   
           self.statusBar().showMessage(sender.text() + ' is released')
+   
+    def keyPressEvent(self, e):
+        if e.key() == ord('D') and not e.isAutoRepeat():
+#            print('D Pressed')
+            self.ImageThread.requestMotorRight(True)
+        if e.key() == ord('A') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorLeft(True)
+        if e.key() == ord('W') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorFW(True)
+        if e.key() == ord('S') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorBW(True)
+        if e.key() == ord('Q') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorStop(True)
+
+    def keyReleaseEvent(self, e):
+        if e.key() == ord('D') and not e.isAutoRepeat():
+#            print('D released')
+            self.ImageThread.requestMotorRight(False)
+        if e.key() == ord('A') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorLeft(False)
+        if e.key() == ord('W') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorFW(False)
+        if e.key() == ord('S') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorBW(False)
+        if e.key() == ord('Q') and not e.isAutoRepeat():
+            self.ImageThread.requestMotorStop(False)
+        
 
     def onkeyPressEvent(self,event):
         if event.key() == ord('I') and not event.isAutoRepeat():
@@ -248,8 +275,6 @@ class Ui_MainWindow(object):
           self.leftButton.setChecked(True)
         if event.key() == ord('L') and not event.isAutoRepeat():
           self.rightButton.setChecked(True)
-        if event.key() == ord('D'):
-          print('D pressed');
         if not event.isAutoRepeat():
           print(event.key())
         else:
@@ -264,8 +289,6 @@ class Ui_MainWindow(object):
           self.leftButton.setChecked(False)
         if event.key() == ord('L') and not event.isAutoRepeat():
           self.rightButton.setChecked(False)
-        if event.key() == ord('D') and not event.isAutoRepeat():
-          print('D released');
         if not event.isAutoRepeat():
           print(event.key())
 
