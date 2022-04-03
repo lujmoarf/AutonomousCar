@@ -62,8 +62,6 @@ class Ui_MainWindow(object):
 #Move the robot
         self.mvfwButton = QtWidgets.QPushButton(self.centralwidget)
         self.mvfwButton.setGeometry(QtCore.QRect(440, 700, 51, 41))
-#        self.mvfwButton.setAutoRepeat(True)
-#        self.mvfwButton.setAutoRepeatInterval(10)
         self.mvfwButton.setObjectName("mvfwButton")
         self.mvbwButton = QtWidgets.QPushButton(self.centralwidget)
         self.mvbwButton.setGeometry(QtCore.QRect(440, 820, 51, 41))
@@ -94,27 +92,45 @@ class Ui_MainWindow(object):
         self.label_2.setGeometry(QtCore.QRect(0, 700, 71, 21))
         self.label_2.setObjectName("label_2")
 
-        self.fwButton.setCheckable(True)
-        self.fwButton.toggled.connect(self.buttontoggled)
-        self.bwButton.setCheckable(True)
-        self.bwButton.toggled.connect(self.buttontoggled)
-        self.leftButton.setCheckable(True)
-        self.leftButton.toggled.connect(self.buttontoggled)
-        self.rightButton.setCheckable(True)
-        self.rightButton.toggled.connect(self.buttontoggled)
+#Camera Controls
+#        self.fwButton.setCheckable(True)
+#        self.fwButton.toggled.connect(self.buttontoggled)
+        self.fwButton.pressed.connect(self.buttonpressed)
+        self.fwButton.released.connect(self.buttonreleased)        
+#        self.bwButton.setCheckable(True)
+#        self.bwButton.toggled.connect(self.buttontoggled)
+        self.bwButton.pressed.connect(self.buttonpressed)
+        self.bwButton.released.connect(self.buttonreleased)        
+#        self.leftButton.setCheckable(True)
+#        self.leftButton.toggled.connect(self.buttontoggled)
+        self.leftButton.pressed.connect(self.buttonpressed)
+        self.leftButton.released.connect(self.buttonreleased)        
+#        self.rightButton.setCheckable(True)
+#        self.rightButton.toggled.connect(self.buttontoggled)
+        self.rightButton.pressed.connect(self.buttonpressed)
+        self.rightButton.released.connect(self.buttonreleased)
         self.streamButton.setCheckable(True)
         self.streamButton.toggled.connect(self.buttontoggled)
 
-        self.mvfwButton.setCheckable(True)
-        self.mvfwButton.toggled.connect(self.buttontoggled)
-        self.mvbwButton.setCheckable(True)
-        self.mvbwButton.toggled.connect(self.buttontoggled)
-        self.mvleftButton.setCheckable(True)
-        self.mvleftButton.toggled.connect(self.buttontoggled)
-        self.mvrightButton.setCheckable(True)
-        self.mvrightButton.toggled.connect(self.buttontoggled)
+#Motor controls
+#        self.mvfwButton.setCheckable(True)
+#        self.mvfwButton.toggled.connect(self.buttontoggled)
+        self.mvfwButton.pressed.connect(self.buttonpressed)
+        self.mvfwButton.released.connect(self.buttonreleased)        
+#        self.mvbwButton.setCheckable(True)
+#        self.mvbwButton.toggled.connect(self.buttontoggled)
+        self.mvbwButton.pressed.connect(self.buttonpressed)        
+        self.mvbwButton.released.connect(self.buttonreleased)
+#        self.mvleftButton.setCheckable(True)
+#        self.mvleftButton.toggled.connect(self.buttontoggled)
+        self.mvleftButton.pressed.connect(self.buttonpressed)        
+        self.mvleftButton.released.connect(self.buttonreleased)        
+#        self.mvrightButton.setCheckable(True)
+#        self.mvrightButton.toggled.connect(self.buttontoggled)
+        self.mvrightButton.pressed.connect(self.buttonpressed)        
+        self.mvrightButton.released.connect(self.buttonreleased)        
 #        self.mvrightButton.pressed.connect(self.onkeyPressEvent)
-        self.stopButton.setCheckable(True)
+#        self.stopButton.setCheckable(True)
         self.stopButton.toggled.connect(self.buttontoggled)
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -131,11 +147,11 @@ class Ui_MainWindow(object):
 
     def viewImage(self):
       img, fps = self.ImageThread.getImage()
-#      cap = cv.VideoCapture("http://192.168.100.157/mjpeg/1")
+#      cap = cv.VideoCapture("http://192.168.1.217/mjpeg/1")
 #      ret, img = cap.read()
 #      print("img = {}".format(img))
       if img is not None:
-        print("img is no None")
+#        print("img is no None")
         img = cv2.resize(img, (self.label.size().width(), self.label.size().height()))
         # img = img[:, :, ::-1]
         height, width, channel = img.shape
@@ -160,31 +176,72 @@ class Ui_MainWindow(object):
 
 # Servo motors control
         self.fwButton.setText(_translate("MainWindow", "FW"))
-        self.fwButton.setShortcut(_translate("MainWindow", "I"))
+#        self.fwButton.setShortcut(_translate("MainWindow", "I"))
         self.bwButton.setText(_translate("MainWindow", "BW"))
-        self.bwButton.setShortcut(_translate("MainWindow", "K"))
+#        self.bwButton.setShortcut(_translate("MainWindow", "K"))
         self.leftButton.setText(_translate("MainWindow", "LEFT"))
-        self.leftButton.setShortcut(_translate("MainWindow", "J"))
+#        self.leftButton.setShortcut(_translate("MainWindow", "J"))
         self.rightButton.setText(_translate("MainWindow", "RIGHT"))
-        self.rightButton.setShortcut(_translate("MainWindow", "l"))
+#        self.rightButton.setShortcut(_translate("MainWindow", "l"))
         self.streamButton.setText(_translate("MainWindow", "STREAM"))
         self.streamButton.setShortcut(_translate("MainWindow", "P"))
 
 # Motors control
         self.mvfwButton.setText(_translate("MainWindow", "MVFW"))
-#        self.mvfwButton.setShortcut(_translate("MainWindow", "W"))
         self.mvbwButton.setText(_translate("MainWindow", "MVBW"))
-#        self.mvbwButton.setShortcut(_translate("MainWindow", "S"))
         self.mvleftButton.setText(_translate("MainWindow", "MVLEFT"))
-#        self.mvleftButton.setShortcut(_translate("MainWindow", "A"))
         self.mvrightButton.setText(_translate("MainWindow", "MVRIGHT"))
- #       self.mvrightButton.setShortcut(_translate("MainWindow", "D"))
         self.stopButton.setText(_translate("MainWindow", "STOP"))
-#        self.stopButton.setShortcut(_translate("MainWindow", "Q"))
 
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Image View</p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">FPS: </span></p></body></html>"))
     
+    def buttonpressed(self):
+        sender = self.sender()
+        if sender.isDown():
+            self.statusBar().showMessage(sender.text() + ' is pressed')        
+#            print(sender.text() + ' is pressed')
+            if sender.text() == 'LEFT':
+                self.ImageThread.requestLeft(True)
+            if sender.text() == 'RIGHT':
+                self.ImageThread.requestRight(True)
+            if sender.text() == 'FW':
+                self.ImageThread.requestFw(True)
+            if sender.text() == 'BW':
+                self.ImageThread.requestBw(True)
+            if sender.text() == 'MVFW':
+                self.ImageThread.requestMotorFW(True)
+            if sender.text() == 'MVBW':
+                self.ImageThread.requestMotorBW(True)
+            if sender.text() == 'MVLEFT':
+                self.ImageThread.requestMotorLeft(True)
+            if sender.text() == 'MVRIGHT':
+                self.ImageThread.requestMotorRight(True)
+
+
+    def buttonreleased(self):
+        sender = self.sender()
+        if not sender.isDown():
+#            self.statusBar().showMessage(sender.text() + ' is released')
+            print(sender.text() + ' is released')
+            if sender.text() == 'LEFT':
+                self.ImageThread.requestLeft(False)
+            if sender.text() == 'RIGHT':
+                self.ImageThread.requestRight(False)
+            if sender.text() == 'FW':
+                self.ImageThread.requestFw(False)
+            if sender.text() == 'BW':
+                self.ImageThread.requestBw(False)
+            if sender.text() == 'MVFW':
+                self.ImageThread.requestMotorFW(False)
+            if sender.text() == 'MVBW':
+                self.ImageThread.requestMotorBW(False)
+            if sender.text() == 'MVLEFT':
+                self.ImageThread.requestMotorLeft(False)
+            if sender.text() == 'MVRIGHT':
+                self.ImageThread.requestMotorRight(False)
+
+
     def buttontoggled(self):
         sender = self.sender()  # This is what you need
         if sender.isChecked():
@@ -196,22 +253,22 @@ class Ui_MainWindow(object):
               self.ImageThread.resume_signal.emit()
             else:
               self.ImageThread.start()
-          if sender.text() == 'LEFT':
-            self.ImageThread.requestLeft(True)
-          if sender.text() == 'RIGHT':
-            self.ImageThread.requestRight(True)
-          if sender.text() == 'FW':
-            self.ImageThread.requestFw(True)
-          if sender.text() == 'BW':
-            self.ImageThread.requestBw(True)
-          if sender.text() == 'STOP':
-            self.ImageThread.requestMotorStop(True)
-          if sender.text() == 'MVFW':
-            self.ImageThread.requestMotorFW(True)
-            self.stopButton.setChecked(False)
-          if sender.text() == 'MVBW':
-            self.ImageThread.requestMotorBW(True)
-            self.stopButton.setChecked(False)
+#          if sender.text() == 'LEFT':
+#            self.ImageThread.requestLeft(True)
+#          if sender.text() == 'RIGHT':
+#            self.ImageThread.requestRight(True)
+#          if sender.text() == 'FW':
+#            self.ImageThread.requestFw(True)
+#          if sender.text() == 'BW':
+#            self.ImageThread.requestBw(True)
+#          if sender.text() == 'STOP':
+#            self.ImageThread.requestMotorStop(True)
+#          if sender.text() == 'MVFW':
+#            self.ImageThread.requestMotorFW(True)
+#            self.stopButton.setChecked(False)
+#          if sender.text() == 'MVBW':
+#            self.ImageThread.requestMotorBW(True)
+#            self.stopButton.setChecked(False)
 
 
           self.statusBar().showMessage(sender.text() + ' is pressed')
@@ -221,26 +278,25 @@ class Ui_MainWindow(object):
             print('STREAM PAUSE')
             self.streamButton.setChecked(False)
             self.ImageThread.pause_signal.emit()
-          if sender.text() == 'LEFT':
-            self.ImageThread.requestLeft(False)
-          if sender.text() == 'RIGHT':
-            self.ImageThread.requestRight(False)
-          if sender.text() == 'FW':
-            self.ImageThread.requestFw(False)
-          if sender.text() == 'BW':
-            self.ImageThread.requestBw(False)
-          if sender.text() == 'STOP':
-            self.ImageThread.requestMotorGo(True)
-          if sender.text() == 'MVFW':
-            self.stopButton.setChecked(True)
-          if sender.text() == 'MVBW':
-            self.stopButton.setChecked(True)
+#          if sender.text() == 'LEFT':
+#            self.ImageThread.requestLeft(False)
+#          if sender.text() == 'RIGHT':
+#            self.ImageThread.requestRight(False)
+#          if sender.text() == 'FW':
+#            self.ImageThread.requestFw(False)
+#          if sender.text() == 'BW':
+#            self.ImageThread.requestBw(False)
+#          if sender.text() == 'STOP':
+#            self.ImageThread.requestMotorGo(True)
+#          if sender.text() == 'MVFW':
+#            self.stopButton.setChecked(True)
+#          if sender.text() == 'MVBW':
+#            self.stopButton.setChecked(True)
   
           self.statusBar().showMessage(sender.text() + ' is released')
    
     def keyPressEvent(self, e):
         if e.key() == ord('D') and not e.isAutoRepeat():
-#            print('D Pressed')
             self.ImageThread.requestMotorRight(True)
         if e.key() == ord('A') and not e.isAutoRepeat():
             self.ImageThread.requestMotorLeft(True)
@@ -250,10 +306,17 @@ class Ui_MainWindow(object):
             self.ImageThread.requestMotorBW(True)
         if e.key() == ord('Q') and not e.isAutoRepeat():
             self.ImageThread.requestMotorStop(True)
+        if e.key() == ord('L') and not e.isAutoRepeat():
+            self.ImageThread.requestRight(True)
+        if e.key() == ord('J') and not e.isAutoRepeat():
+            self.ImageThread.requestLeft(True)
+        if e.key() == ord('K') and not e.isAutoRepeat():
+            self.ImageThread.requestBw(True)
+        if e.key() == ord('I') and not e.isAutoRepeat():
+            self.ImageThread.requestFw(True)            
 
     def keyReleaseEvent(self, e):
         if e.key() == ord('D') and not e.isAutoRepeat():
-#            print('D released')
             self.ImageThread.requestMotorRight(False)
         if e.key() == ord('A') and not e.isAutoRepeat():
             self.ImageThread.requestMotorLeft(False)
@@ -263,32 +326,39 @@ class Ui_MainWindow(object):
             self.ImageThread.requestMotorBW(False)
         if e.key() == ord('Q') and not e.isAutoRepeat():
             self.ImageThread.requestMotorStop(False)
-        
+        if e.key() == ord('L') and not e.isAutoRepeat():
+            self.ImageThread.requestRight(False)
+        if e.key() == ord('J') and not e.isAutoRepeat():
+            self.ImageThread.requestLeft(False)
+        if e.key() == ord('K') and not e.isAutoRepeat():
+            self.ImageThread.requestBw(False)   
+        if e.key() == ord('I') and not e.isAutoRepeat():
+            self.ImageThread.requestFw(False)        
 
-    def onkeyPressEvent(self,event):
-        if event.key() == ord('I') and not event.isAutoRepeat():
-          self.fwButton.setChecked(True);
-          print('I is pressed');
-        if event.key() == ord('K') and not event.isAutoRepeat():
-          self.bwButton.setChecked(True)
-        if event.key() == ord('J') and not event.isAutoRepeat():
-          self.leftButton.setChecked(True)
-        if event.key() == ord('L') and not event.isAutoRepeat():
-          self.rightButton.setChecked(True)
-        if not event.isAutoRepeat():
-          print(event.key())
-        else:
-          print(event.key())
+#    def onkeyPressEvent(self,event):
+#        if event.key() == ord('I') and not event.isAutoRepeat():
+#          self.fwButton.setChecked(True);
+#          print('I is pressed');
+#        if event.key() == ord('K') and not event.isAutoRepeat():
+#          self.bwButton.setChecked(True)
+#        if event.key() == ord('J') and not event.isAutoRepeat():
+#          self.leftButton.setChecked(True)
+#        if event.key() == ord('L') and not event.isAutoRepeat():
+#          self.rightButton.setChecked(True)
+#        if not event.isAutoRepeat():
+#          print(event.key())
+#        else:
+#          print(event.key())
 
-    def onkeyReleaseEvent(self, event):
-        if event.key() == ord('I') and not event.isAutoRepeat():
-          self.fwButton.setChecked(False)
-        if event.key() == ord('K') and not event.isAutoRepeat():
-          self.bwButton.setChecked(False)
-        if event.key() == ord('J') and not event.isAutoRepeat():
-          self.leftButton.setChecked(False)
-        if event.key() == ord('L') and not event.isAutoRepeat():
-          self.rightButton.setChecked(False)
-        if not event.isAutoRepeat():
-          print(event.key())
+#    def onkeyReleaseEvent(self, event):
+#        if event.key() == ord('I') and not event.isAutoRepeat():
+#          self.fwButton.setChecked(False)
+#        if event.key() == ord('K') and not event.isAutoRepeat():
+#          self.bwButton.setChecked(False)
+#        if event.key() == ord('J') and not event.isAutoRepeat():
+#          self.leftButton.setChecked(False)
+#        if event.key() == ord('L') and not event.isAutoRepeat():
+#          self.rightButton.setChecked(False)
+#        if not event.isAutoRepeat():
+#          print(event.key())
 

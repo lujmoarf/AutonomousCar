@@ -16,6 +16,7 @@ import time
 from websocket import create_connection
 
 udpServerAddr = ('192.168.1.216', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
+udpServerCAMAddr = ('192.168.1.217', 6868)
 
 RECV_BUFF_SIZE = 8192*8
 HEADER_SIZE = 4
@@ -72,6 +73,7 @@ class ImageThread(QThread):
     self.initRequestCnt = 5
 
   def requestMotorFW(self, val):
+    print('[DEBUG]ImageThread request motor forward {}'.format(val))
     while self.initRequestCnt > 0:
         if val:
             self.udp_socket.sendto(b'mFWon', udpServerAddr)
@@ -81,6 +83,7 @@ class ImageThread(QThread):
     self.initRequestCnt = 5
 
   def requestMotorBW(self, val):
+    print('[DEBUG]ImageThread request motor backward {}'.format(val))
     while self.initRequestCnt > 0:
         if val:
             self.udp_socket.sendto(b'mBWon', udpServerAddr)
@@ -90,6 +93,7 @@ class ImageThread(QThread):
     self.initRequestCnt = 5
 
   def requestMotorLeft(self, val):
+    print('[DEBUG]ImageThread request motor left {}'.format(val))
     while self.initRequestCnt > 0:
         if val:
             self.udp_socket.sendto(b'mLFon', udpServerAddr)
@@ -99,6 +103,7 @@ class ImageThread(QThread):
     self.initRequestCnt = 5
 
   def requestMotorRight(self, val):
+    print('[DEBUG]ImageThread request Motor Right {}'.format(val))
     while self.initRequestCnt > 0:
         if val:
             self.udp_socket.sendto(b'mRGon', udpServerAddr)
@@ -149,7 +154,7 @@ class ImageThread(QThread):
       self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
-  def requestFw(self, val):
+  def requestBw(self, val):
     print('[DEBUG]ImageThread request backward {}'.format(val))
     while self.initRequestCnt > 0:
       if val:
@@ -159,7 +164,7 @@ class ImageThread(QThread):
       self.initRequestCnt -= 1
     self.initRequestCnt = 5
     
-  def requestBw(self, val):
+  def requestFw(self, val):
     print('[DEBUG]ImageThread request forward {}'.format(val))
     while self.initRequestCnt > 0:
       if val:
@@ -173,7 +178,7 @@ class ImageThread(QThread):
     ws = None
     while self.initRequestCnt > 0:
       try:
-          self.udp_socket.sendto(b'whoami', udpServerAddr)
+          self.udp_socket.sendto(b'whoami', udpServerCAMAddr)
           data, server = self.udp_socket.recvfrom(1024)
           ws = create_connection("ws://{}:86/websocket".format(server[0]))
           break
@@ -198,7 +203,7 @@ class ImageThread(QThread):
       frame = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
       if frame is not None:
         self.frame = frame[:,:,::-1].copy()
-        self.frame, boxes = self.model.do_inference(self.frame)
+#        self.frame, boxes = self.model.do_inference(self.frame)
         self.fps = 1/(time.time() - start_time)
         self.fps = round(self.fps,2)
         print ("---receive and processing frame {} time: {} seconds ---".format(cnt, (time.time() - start_time)))
