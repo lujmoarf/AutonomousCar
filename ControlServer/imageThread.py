@@ -66,11 +66,11 @@ class ImageThread(QThread):
         self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
-  def requestMotorGo(self, val):
-    while self.initRequestCnt > 0:
-      self.udp_socket.sendto(b'stopoff', udpServerAddr)
-      self.initRequestCnt -= 1
-    self.initRequestCnt = 5
+#  def requestMotorGo(self, val):
+#    while self.initRequestCnt > 0:
+#      self.udp_socket.sendto(b'stopoff', udpServerAddr)
+#      self.initRequestCnt -= 1
+#    self.initRequestCnt = 5
 
   def requestMotorFW(self, val):
     print('[DEBUG]ImageThread request motor forward {}'.format(val))
@@ -111,7 +111,6 @@ class ImageThread(QThread):
             self.udp_socket.sendto(b'mRGoff', udpServerAddr)
         self.initRequestCnt -= 1
     self.initRequestCnt = 5
-
 
   def requestStop(self):
     while self.initRequestCnt > 0:

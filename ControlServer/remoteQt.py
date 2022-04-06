@@ -93,44 +93,27 @@ class Ui_MainWindow(object):
         self.label_2.setObjectName("label_2")
 
 #Camera Controls
-#        self.fwButton.setCheckable(True)
-#        self.fwButton.toggled.connect(self.buttontoggled)
         self.fwButton.pressed.connect(self.buttonpressed)
         self.fwButton.released.connect(self.buttonreleased)        
-#        self.bwButton.setCheckable(True)
-#        self.bwButton.toggled.connect(self.buttontoggled)
         self.bwButton.pressed.connect(self.buttonpressed)
         self.bwButton.released.connect(self.buttonreleased)        
-#        self.leftButton.setCheckable(True)
-#        self.leftButton.toggled.connect(self.buttontoggled)
         self.leftButton.pressed.connect(self.buttonpressed)
         self.leftButton.released.connect(self.buttonreleased)        
-#        self.rightButton.setCheckable(True)
-#        self.rightButton.toggled.connect(self.buttontoggled)
         self.rightButton.pressed.connect(self.buttonpressed)
         self.rightButton.released.connect(self.buttonreleased)
         self.streamButton.setCheckable(True)
         self.streamButton.toggled.connect(self.buttontoggled)
 
 #Motor controls
-#        self.mvfwButton.setCheckable(True)
-#        self.mvfwButton.toggled.connect(self.buttontoggled)
         self.mvfwButton.pressed.connect(self.buttonpressed)
         self.mvfwButton.released.connect(self.buttonreleased)        
-#        self.mvbwButton.setCheckable(True)
-#        self.mvbwButton.toggled.connect(self.buttontoggled)
         self.mvbwButton.pressed.connect(self.buttonpressed)        
         self.mvbwButton.released.connect(self.buttonreleased)
-#        self.mvleftButton.setCheckable(True)
-#        self.mvleftButton.toggled.connect(self.buttontoggled)
         self.mvleftButton.pressed.connect(self.buttonpressed)        
         self.mvleftButton.released.connect(self.buttonreleased)        
-#        self.mvrightButton.setCheckable(True)
-#        self.mvrightButton.toggled.connect(self.buttontoggled)
         self.mvrightButton.pressed.connect(self.buttonpressed)        
         self.mvrightButton.released.connect(self.buttonreleased)        
-#        self.mvrightButton.pressed.connect(self.onkeyPressEvent)
-#        self.stopButton.setCheckable(True)
+        self.stopButton.setCheckable(True)
         self.stopButton.toggled.connect(self.buttontoggled)
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -176,13 +159,9 @@ class Ui_MainWindow(object):
 
 # Servo motors control
         self.fwButton.setText(_translate("MainWindow", "FW"))
-#        self.fwButton.setShortcut(_translate("MainWindow", "I"))
         self.bwButton.setText(_translate("MainWindow", "BW"))
-#        self.bwButton.setShortcut(_translate("MainWindow", "K"))
         self.leftButton.setText(_translate("MainWindow", "LEFT"))
-#        self.leftButton.setShortcut(_translate("MainWindow", "J"))
         self.rightButton.setText(_translate("MainWindow", "RIGHT"))
-#        self.rightButton.setShortcut(_translate("MainWindow", "l"))
         self.streamButton.setText(_translate("MainWindow", "STREAM"))
         self.streamButton.setShortcut(_translate("MainWindow", "P"))
 
@@ -334,31 +313,4 @@ class Ui_MainWindow(object):
             self.ImageThread.requestBw(False)   
         if e.key() == ord('I') and not e.isAutoRepeat():
             self.ImageThread.requestFw(False)        
-
-#    def onkeyPressEvent(self,event):
-#        if event.key() == ord('I') and not event.isAutoRepeat():
-#          self.fwButton.setChecked(True);
-#          print('I is pressed');
-#        if event.key() == ord('K') and not event.isAutoRepeat():
-#          self.bwButton.setChecked(True)
-#        if event.key() == ord('J') and not event.isAutoRepeat():
-#          self.leftButton.setChecked(True)
-#        if event.key() == ord('L') and not event.isAutoRepeat():
-#          self.rightButton.setChecked(True)
-#        if not event.isAutoRepeat():
-#          print(event.key())
-#        else:
-#          print(event.key())
-
-#    def onkeyReleaseEvent(self, event):
-#        if event.key() == ord('I') and not event.isAutoRepeat():
-#          self.fwButton.setChecked(False)
-#        if event.key() == ord('K') and not event.isAutoRepeat():
-#          self.bwButton.setChecked(False)
-#        if event.key() == ord('J') and not event.isAutoRepeat():
-#          self.leftButton.setChecked(False)
-#        if event.key() == ord('L') and not event.isAutoRepeat():
-#          self.rightButton.setChecked(False)
-#        if not event.isAutoRepeat():
-#          print(event.key())
 
