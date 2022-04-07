@@ -13,10 +13,11 @@ import select
 import re
 from configparser import ConfigParser 
 import time
-from websocket import create_connection
+#from websocket import create_connection
+import websocket
 
 udpServerAddr = ('192.168.1.216', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
-udpServerCAMAddr = ('192.168.1.217', 6868)
+udpServerCAMAddr = ('192.168.1.219', 6868)
 
 RECV_BUFF_SIZE = 8192*8
 HEADER_SIZE = 4
@@ -196,22 +197,24 @@ class ImageThread(QThread):
             time.sleep(0.1)
             continue
       frame_data =  ws.recv()
+#      print("Received '%s'" % frame_data)
       frame_stream = io.BytesIO(frame_data)
       frame_stream.seek(0)
       file_bytes = np.asarray(bytearray(frame_stream.read()), dtype=np.uint8)
       frame = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+#      if ws != None:
       if frame is not None:
         self.frame = frame[:,:,::-1].copy()
-#        self.frame, boxes = self.model.do_inference(self.frame)
+    #        self.frame, boxes = self.model.do_inference(self.frame)
         self.fps = 1/(time.time() - start_time)
         self.fps = round(self.fps,2)
         print ("---receive and processing frame {} time: {} seconds ---".format(cnt, (time.time() - start_time)))
         start_time = time.time()
-
+    
         self.new_image.emit()
 
         if DEBUG:
-          cv2.imwrite('test_{}.jpg'.format(0), self.frame[:,:,::-1])
+            cv2.imwrite('test_{}.jpg'.format(0), self.frame[:,:,::-1])
 
     if ws is not None:
       ws.close()
