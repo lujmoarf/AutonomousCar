@@ -25,6 +25,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <SparkFun_TB6612.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <WebSerial.h>
+
 
 #define DEBUG
 // #define SAVE_IMG
@@ -40,6 +44,10 @@ WiFiUDP UDPServer;
 unsigned int UDPPort = 6868;
 IPAddress addrRemote;
 int portRemote;
+
+AsyncWebServer server(80);
+
+
 
 // Use WiFiClient class to create TCP connections
 WiFiClient tcpClient;
@@ -78,7 +86,7 @@ int motor2Pin2 = 16;
 int enable2Pin = 4;
 
 int standbyPin = 2;
-
+#define LED 2
 
 // these constants are used to allow you to make your motor configuration 
 // line up with function names like forward.  Value can be 1 or -1
@@ -147,6 +155,25 @@ uint8_t camNo = 0;
  * Pin for voltage monitoring
  */
 const int PIN_voltage = 34;
+
+/**************************************************
+ * Procedure for Serial Web Server
+ */
+void recvMsg(uint8_t *data, size_t len){
+  WebSerial.println("Received Data...");
+  String d = "";
+  for(int i=0; i < len; i++){
+    d += char(data[i]);
+  }
+  WebSerial.println(d);
+  if (d == "ON"){
+    digitalWrite(LED, HIGH);
+  }
+  if (d=="OFF"){
+    digitalWrite(LED, LOW);
+  }
+}
+
 
 void processData(){
   int cb = UDPServer.parsePacket();
@@ -261,6 +288,10 @@ void setup(void) {
   Serial.begin(115200);
   Serial.print("\n");
   Serial.setDebugOutput(true);
+
+  WebSerial.begin(&server);
+  WebSerial.msgCallback(recvMsg);
+  server.begin();
   
 //  setup_motor();
 /****************************************
@@ -274,6 +305,7 @@ void setup(void) {
 
   //WIFI INIT
   Serial.printf("Connecting to %s\n", ssid);
+  WebSerial.printf("Connecting to %s\n", ssid);
   if (String(WiFi.SSID()) != String(ssid)) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
@@ -287,11 +319,16 @@ void setup(void) {
   Serial.println("");
   Serial.print("Connected! IP address: ");
   Serial.println(WiFi.localIP());
+  WebSerial.println("");
+  WebSerial.print("Connected! IP address: ");
+  WebSerial.println(WiFi.localIP());
+  
 
   UDPServer.begin(UDPPort); 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 
+  
   // 1. 50hz ==> period = 20ms (sg90 servo require 20ms pulse, duty cycle is 1->2ms: -90=>90degree)
   // 2. resolution = 16, maximum value is 2^16-1=65535
   // From 1 and 2 => -90=>90 degree or 0=>180degree ~ 3276=>6553
@@ -373,6 +410,7 @@ void loop(void) {
 
     if (old_car_status != car_status){
       Serial.println(car_status);
+      WebSerial.println(car_status);
       old_car_status = car_status;
     }
 

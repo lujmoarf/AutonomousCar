@@ -13,7 +13,7 @@ import select
 import re
 from configparser import ConfigParser 
 import time
-#from websocket import create_connection
+from websocket import create_connection
 import websocket
 
 udpServerAddr = ('192.168.1.216', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
@@ -66,12 +66,6 @@ class ImageThread(QThread):
             self.udp_socket.sendto(b'stopoff', udpServerAddr)
         self.initRequestCnt -= 1
     self.initRequestCnt = 5
-
-#  def requestMotorGo(self, val):
-#    while self.initRequestCnt > 0:
-#      self.udp_socket.sendto(b'stopoff', udpServerAddr)
-#      self.initRequestCnt -= 1
-#    self.initRequestCnt = 5
 
   def requestMotorFW(self, val):
     print('[DEBUG]ImageThread request motor forward {}'.format(val))
@@ -174,6 +168,14 @@ class ImageThread(QThread):
       self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
+  def getWifiTxLevel(self, val):
+#    self.udp_socket.sendto(b'getWifi', udpServerCAMAddr)
+    data, server = self.udp_socket.recvfrom(1024)
+#    print("RX data = {}".format(data))
+    wifi = data.decode().split(";")
+#    print("Wifi = {}".format(wifi))
+    return wifi[1]
+
   def run(self):
     ws = None
     while self.initRequestCnt > 0:
@@ -202,7 +204,6 @@ class ImageThread(QThread):
       frame_stream.seek(0)
       file_bytes = np.asarray(bytearray(frame_stream.read()), dtype=np.uint8)
       frame = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-#      if ws != None:
       if frame is not None:
         self.frame = frame[:,:,::-1].copy()
     #        self.frame, boxes = self.model.do_inference(self.frame)

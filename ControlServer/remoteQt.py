@@ -27,6 +27,10 @@ class Ui_MainWindow(object):
 
         self.ImageThread = ImageThread()
         self.ImageThread.new_image.connect(self.viewImage)
+
+        self.checkThreadTimer = QtCore.QTimer(self)
+#        self.checkThreadTimer.start(1000)
+        self.checkThreadTimer.timeout.connect(self.getWiFiRxLevel)
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -91,6 +95,9 @@ class Ui_MainWindow(object):
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(0, 700, 71, 21))
         self.label_2.setObjectName("label_2")
+        self.wifilabel = QtWidgets.QLabel(self.centralwidget)
+        self.wifilabel.setGeometry(QtCore.QRect(200, 700, 71, 21))
+        self.wifilabel.setObjectName("wifilabel")
 
 #Camera Controls
         self.fwButton.pressed.connect(self.buttonpressed)
@@ -127,6 +134,10 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def getWiFiRxLevel(self):
+        rxlevel = self.ImageThread.getWifiTxLevel(True)
+        self.wifilabel.setText('FPS: {}'.format(rxlevel))
 
     def viewImage(self):
       img, fps = self.ImageThread.getImage()
@@ -232,23 +243,6 @@ class Ui_MainWindow(object):
               self.ImageThread.resume_signal.emit()
             else:
               self.ImageThread.start()
-#          if sender.text() == 'LEFT':
-#            self.ImageThread.requestLeft(True)
-#          if sender.text() == 'RIGHT':
-#            self.ImageThread.requestRight(True)
-#          if sender.text() == 'FW':
-#            self.ImageThread.requestFw(True)
-#          if sender.text() == 'BW':
-#            self.ImageThread.requestBw(True)
-#          if sender.text() == 'STOP':
-#            self.ImageThread.requestMotorStop(True)
-#          if sender.text() == 'MVFW':
-#            self.ImageThread.requestMotorFW(True)
-#            self.stopButton.setChecked(False)
-#          if sender.text() == 'MVBW':
-#            self.ImageThread.requestMotorBW(True)
-#            self.stopButton.setChecked(False)
-
 
           self.statusBar().showMessage(sender.text() + ' is pressed')
 
@@ -257,20 +251,6 @@ class Ui_MainWindow(object):
             print('STREAM PAUSE')
             self.streamButton.setChecked(False)
             self.ImageThread.pause_signal.emit()
-#          if sender.text() == 'LEFT':
-#            self.ImageThread.requestLeft(False)
-#          if sender.text() == 'RIGHT':
-#            self.ImageThread.requestRight(False)
-#          if sender.text() == 'FW':
-#            self.ImageThread.requestFw(False)
-#          if sender.text() == 'BW':
-#            self.ImageThread.requestBw(False)
-#          if sender.text() == 'STOP':
-#            self.ImageThread.requestMotorGo(True)
-#          if sender.text() == 'MVFW':
-#            self.stopButton.setChecked(True)
-#          if sender.text() == 'MVBW':
-#            self.stopButton.setChecked(True)
   
           self.statusBar().showMessage(sender.text() + ' is released')
    
@@ -292,7 +272,9 @@ class Ui_MainWindow(object):
         if e.key() == ord('K') and not e.isAutoRepeat():
             self.ImageThread.requestBw(True)
         if e.key() == ord('I') and not e.isAutoRepeat():
-            self.ImageThread.requestFw(True)            
+            self.ImageThread.requestFw(True)
+        if e.key() == ord('T') and not e.isAutoRepeat():
+            self.ImageThread.getWifiTxLevel(True)
 
     def keyReleaseEvent(self, e):
         if e.key() == ord('D') and not e.isAutoRepeat():

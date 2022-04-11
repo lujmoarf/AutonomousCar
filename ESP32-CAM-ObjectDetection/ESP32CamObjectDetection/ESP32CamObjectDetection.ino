@@ -70,7 +70,11 @@ int ledState = LOW;
 uint8_t camNo = 0;
 
 void processData(){
+  float wifiStrength;
+  const int numberPoints = 7;
   int cb = UDPServer.parsePacket();
+  String res;
+  
   if (cb) {
     UDPServer.read(packetBuffer, RECVLENGTH);
     addrRemote = UDPServer.remoteIP();
@@ -78,37 +82,41 @@ void processData(){
 
     String strPackage = String((const char*)packetBuffer);
 #ifdef DEBUG
-    Serial.print("receive: ");
-    for (int y = 0; y < RECVLENGTH; y++){
+    Serial.print("receive from: ");
+/*    for (int y = 0; y < RECVLENGTH; y++){
       Serial.print(packetBuffer[y]);
       Serial.print("\n");
-    }
-    Serial.print(strPackage);
-    Serial.print(" from: ");
-    Serial.println(addrRemote);
+    }*/
+    
+    Serial.print(addrRemote);
+    Serial.print(":");
+    Serial.print(portRemote);
+    Serial.print(" <- ");
+    Serial.println(strPackage);
 #endif
     if(strPackage.equals("whoami")){
-      UDPServer.beginPacket(addrRemote, portRemote);
-      String res = "ESP32-CAM";
-      UDPServer.write((const uint8_t*)res.c_str(),res.length());
-      UDPServer.endPacket();
-      Serial.println("response = " + res);
+      //UDPServer.beginPacket(addrRemote, portRemote);
+      sendData("ESP32-CAM");
+    } else if(strPackage.equals("getWifi")){
+      //UDPServer.beginPacket(addrRemote, portRemote);
+      wifiStrength = getStrength(numberPoints);
+      sendData("WifiRxPower;" + String(wifiStrength));
     }
   }
   memset(packetBuffer, 0, RECVLENGTH);
 }
 
 void sendData(String msg){
-  if (addrRemote != NULL or portRemote != NULL){
+  if (addrRemote != NULL and portRemote != NULL){
     UDPServer.beginPacket(addrRemote, portRemote);
     UDPServer.write((const uint8_t*)msg.c_str(),msg.length());
     UDPServer.endPacket();
     Serial.print("sent to ");
     Serial.print(addrRemote);
     Serial.println(":" + String(portRemote) + " -> " + msg);
-  } else {
-    Serial.println("ERROR: remote IP or remote port not defined. Found addrRemote = " + String(addrRemote) + " and portRemote = " + String(portRemote));
-  }
+  } //else {
+    //Serial.println("ERROR: remote IP or remote port not defined. Found addrRemote = " + String(addrRemote) + " and portRemote = " + String(portRemote));
+  //}
 }
 
 
@@ -183,9 +191,6 @@ void setup(void) {
     } else {
       ledState = LOW;
     }
-
-    // set the LED with the ledState of the variable:
-    // digitalWrite(LED_BUILTIN, ledState);
     Serial.print(".");
   }
   // digitalWrite(LED_BUILTIN, LOW);
@@ -203,11 +208,10 @@ void loop(void) {
   float wifiStrength;
   const int numberPoints = 7;
   
-  if (WiFi.status() == WL_CONNECTED) { 
+  /*if (WiFi.status() == WL_CONNECTED) { 
     wifiStrength = getStrength(numberPoints);
-//    Serial.println("WiFi Signal = " + String(wifiStrength));
     sendData("WifiRxPower;" + String(wifiStrength));
-  }  
+  }*/
   
   webSocket.loop();
   if(clientConnected == true){
