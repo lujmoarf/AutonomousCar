@@ -86,7 +86,7 @@ int motor2Pin2 = 16;
 int enable2Pin = 4;
 
 int standbyPin = 2;
-#define LED 2
+//#define LED 2
 
 // these constants are used to allow you to make your motor configuration 
 // line up with function names like forward.  Value can be 1 or -1
@@ -166,12 +166,12 @@ void recvMsg(uint8_t *data, size_t len){
     d += char(data[i]);
   }
   WebSerial.println(d);
-  if (d == "ON"){
+/*  if (d == "ON"){
     digitalWrite(LED, HIGH);
   }
   if (d=="OFF"){
     digitalWrite(LED, LOW);
-  }
+  }*/
 }
 
 
@@ -193,7 +193,10 @@ void processData(){
     Serial.print(strPackage);
     Serial.print(" from: ");
     Serial.println(addrRemote);
-
+    WebSerial.print("receive: ");
+    WebSerial.print(strPackage);
+    WebSerial.print(" from: ");
+    WebSerial.println(addrRemote);
 
     if(strPackage.equals("whoami")){
       UDPServer.beginPacket(addrRemote, portRemote);
@@ -201,6 +204,7 @@ void processData(){
       UDPServer.write((const uint8_t*)res.c_str(),res.length());
       UDPServer.endPacket();
       Serial.println("response");
+      WebSerial.println("response");
     }else if(strPackage.equals("fwon")){
       reqFw = true;
     }else if(strPackage.equals("bwon")){
@@ -272,6 +276,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       case WStype_FRAGMENT:
       case WStype_FRAGMENT_FIN:
           Serial.println(type);
+          WebSerial.println(type);
           break;
   }
 }
@@ -289,9 +294,7 @@ void setup(void) {
   Serial.print("\n");
   Serial.setDebugOutput(true);
 
-  WebSerial.begin(&server);
-  WebSerial.msgCallback(recvMsg);
-  server.begin();
+
   
 //  setup_motor();
 /****************************************
@@ -305,7 +308,6 @@ void setup(void) {
 
   //WIFI INIT
   Serial.printf("Connecting to %s\n", ssid);
-  WebSerial.printf("Connecting to %s\n", ssid);
   if (String(WiFi.SSID()) != String(ssid)) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
@@ -318,11 +320,7 @@ void setup(void) {
   // digitalWrite(LED_BUILTIN, LOW);
   Serial.println("");
   Serial.print("Connected! IP address: ");
-  Serial.println(WiFi.localIP());
-  WebSerial.println("");
-  WebSerial.print("Connected! IP address: ");
-  WebSerial.println(WiFi.localIP());
-  
+  Serial.println(WiFi.localIP());  
 
   UDPServer.begin(UDPPort); 
   webSocket.begin();
@@ -349,6 +347,11 @@ void setup(void) {
    * monitor power setup
    */
   pinMode(PIN_voltage, INPUT);
+
+  WebSerial.begin(&server);
+  WebSerial.msgCallback(recvMsg);
+//  WebSerial.setDebugOutput(true);
+  server.begin();  
 }
 
 void loop(void) {

@@ -16,7 +16,7 @@ import time
 from websocket import create_connection
 import websocket
 
-udpServerAddr = ('192.168.1.216', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
+udpServerAddr = ('192.168.1.222', 6868) # replace with your network address, it usually 192.168.1.255 (255 in this case means broadcast)
 udpServerCAMAddr = ('192.168.1.219', 6868)
 
 RECV_BUFF_SIZE = 8192*8
