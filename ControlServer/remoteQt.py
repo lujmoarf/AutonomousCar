@@ -21,7 +21,6 @@ import time
 DEBUG = False
 
 class Ui_MainWindow(object):
-    
     def __init__(self):
         self.setupUi(self)
 
@@ -31,7 +30,7 @@ class Ui_MainWindow(object):
         self.checkThreadTimer = QtCore.QTimer(self)
 #        self.checkThreadTimer.start(1000)
         self.checkThreadTimer.timeout.connect(self.getWiFiRxLevel)
-    
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1305, 913)
@@ -80,6 +79,26 @@ class Ui_MainWindow(object):
         self.stopButton.setGeometry(QtCore.QRect(430, 750, 71, 61))
         self.stopButton.setObjectName("stopButton")
 
+        self.speed1 = QtWidgets.QPushButton(self.centralwidget)
+        self.speed1.setGeometry(QtCore.QRect(300, 700, 51, 41))
+        self.speed1.setObjectName("speed1")
+        self.speed1.setCheckable(True)
+        self.speed1.toggled.connect(self.buttontoggled)
+        self.speed2 = QtWidgets.QPushButton(self.centralwidget)
+        self.speed2.setGeometry(QtCore.QRect(300, 760, 51, 41))
+        self.speed2.setObjectName("speed2")
+        self.speed2.setCheckable(True)
+        self.speed2.toggled.connect(self.buttontoggled)
+        self.speed3 = QtWidgets.QPushButton(self.centralwidget)
+        self.speed3.setGeometry(QtCore.QRect(300, 820, 51, 41))
+        self.speed3.setObjectName("speed3")
+        self.speed3.setCheckable(True)
+        self.speed3.toggled.connect(self.buttontoggled)
+
+        self.rb_speed1 = QtWidgets.QRadioButton(self.centralwidget)
+        self.rb_speed1.setGeometry(QtCore.QRect(250,700,51,41))
+        self.rb_speed1.toggled.connect(self.buttontoggled)
+
 
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 1271, 671))
@@ -101,11 +120,11 @@ class Ui_MainWindow(object):
 
 #Camera Controls
         self.fwButton.pressed.connect(self.buttonpressed)
-        self.fwButton.released.connect(self.buttonreleased)        
+        self.fwButton.released.connect(self.buttonreleased)
         self.bwButton.pressed.connect(self.buttonpressed)
-        self.bwButton.released.connect(self.buttonreleased)        
+        self.bwButton.released.connect(self.buttonreleased)
         self.leftButton.pressed.connect(self.buttonpressed)
-        self.leftButton.released.connect(self.buttonreleased)        
+        self.leftButton.released.connect(self.buttonreleased)
         self.rightButton.pressed.connect(self.buttonpressed)
         self.rightButton.released.connect(self.buttonreleased)
         self.streamButton.setCheckable(True)
@@ -113,13 +132,13 @@ class Ui_MainWindow(object):
 
 #Motor controls
         self.mvfwButton.pressed.connect(self.buttonpressed)
-        self.mvfwButton.released.connect(self.buttonreleased)        
-        self.mvbwButton.pressed.connect(self.buttonpressed)        
+        self.mvfwButton.released.connect(self.buttonreleased)
+        self.mvbwButton.pressed.connect(self.buttonpressed)
         self.mvbwButton.released.connect(self.buttonreleased)
-        self.mvleftButton.pressed.connect(self.buttonpressed)        
-        self.mvleftButton.released.connect(self.buttonreleased)        
-        self.mvrightButton.pressed.connect(self.buttonpressed)        
-        self.mvrightButton.released.connect(self.buttonreleased)        
+        self.mvleftButton.pressed.connect(self.buttonpressed)
+        self.mvleftButton.released.connect(self.buttonreleased)
+        self.mvrightButton.pressed.connect(self.buttonpressed)
+        self.mvrightButton.released.connect(self.buttonreleased)
         self.stopButton.setCheckable(True)
         self.stopButton.toggled.connect(self.buttontoggled)
 
@@ -183,13 +202,22 @@ class Ui_MainWindow(object):
         self.mvrightButton.setText(_translate("MainWindow", "MVRIGHT"))
         self.stopButton.setText(_translate("MainWindow", "STOP"))
 
+        self.speed1.setText(_translate("MainWindow", "Speed1"))
+        self.speed1.setShortcut(_translate("MainWindow", "1"))
+        self.speed2.setText(_translate("MainWindow", "Speed2"))
+        self.speed2.setShortcut(_translate("MainWindow", "2"))
+        self.speed3.setText(_translate("MainWindow", "Speed3"))
+        self.speed3.setShortcut(_translate("MainWindow", "3"))
+
+
+
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Image View</p></body></html>"))
         self.label_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">FPS: </span></p></body></html>"))
     
     def buttonpressed(self):
         sender = self.sender()
         if sender.isDown():
-            self.statusBar().showMessage(sender.text() + ' is pressed')        
+            self.statusBar().showMessage(sender.text() + ' is pressed')
 #            print(sender.text() + ' is pressed')
             if sender.text() == 'LEFT':
                 self.ImageThread.requestLeft(True)
@@ -243,6 +271,11 @@ class Ui_MainWindow(object):
               self.ImageThread.resume_signal.emit()
             else:
               self.ImageThread.start()
+          elif sender.text == 'Speed1':
+              print('Speed1 toggled checked')
+              self.speed1.setChecked(True)
+              self.speed2.setChecked(False)
+              self.speed3.setChecked(False)
 
           self.statusBar().showMessage(sender.text() + ' is pressed')
 
@@ -292,7 +325,7 @@ class Ui_MainWindow(object):
         if e.key() == ord('J') and not e.isAutoRepeat():
             self.ImageThread.requestLeft(False)
         if e.key() == ord('K') and not e.isAutoRepeat():
-            self.ImageThread.requestBw(False)   
+            self.ImageThread.requestBw(False)
         if e.key() == ord('I') and not e.isAutoRepeat():
-            self.ImageThread.requestFw(False)        
+            self.ImageThread.requestFw(False)
 
