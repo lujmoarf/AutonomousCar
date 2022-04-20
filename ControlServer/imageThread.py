@@ -107,6 +107,19 @@ class ImageThread(QThread):
         self.initRequestCnt -= 1
     self.initRequestCnt = 5
 
+  def setMotorSpeed(self, val):
+    print('[DEBUG]ImageThread request Motor Speed = {}'.format(val))
+    while self.initRequestCnt > 0:
+        if val == 1:
+            self.udp_socket.sendto(b'speed150', udpServerAddr)
+        elif val == 2:
+            self.udp_socket.sendto(b'speed200', udpServerAddr)
+        elif val == 3:
+            self.udp_socket.sendto(b'speed250', udpServerAddr)
+        self.initRequestCnt -= 1
+    self.initRequestCnt = 5
+
+
   def requestStop(self):
     while self.initRequestCnt > 0:
       self.udp_socket.sendto(b'stop', udpServerAddr)

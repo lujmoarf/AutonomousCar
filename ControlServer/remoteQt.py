@@ -79,26 +79,16 @@ class Ui_MainWindow(object):
         self.stopButton.setGeometry(QtCore.QRect(430, 750, 71, 61))
         self.stopButton.setObjectName("stopButton")
 
-        self.speed1 = QtWidgets.QPushButton(self.centralwidget)
-        self.speed1.setGeometry(QtCore.QRect(300, 700, 51, 41))
-        self.speed1.setObjectName("speed1")
-        self.speed1.setCheckable(True)
-        self.speed1.toggled.connect(self.buttontoggled)
-        self.speed2 = QtWidgets.QPushButton(self.centralwidget)
-        self.speed2.setGeometry(QtCore.QRect(300, 760, 51, 41))
-        self.speed2.setObjectName("speed2")
-        self.speed2.setCheckable(True)
-        self.speed2.toggled.connect(self.buttontoggled)
-        self.speed3 = QtWidgets.QPushButton(self.centralwidget)
-        self.speed3.setGeometry(QtCore.QRect(300, 820, 51, 41))
-        self.speed3.setObjectName("speed3")
-        self.speed3.setCheckable(True)
-        self.speed3.toggled.connect(self.buttontoggled)
-
         self.rb_speed1 = QtWidgets.QRadioButton(self.centralwidget)
-        self.rb_speed1.setGeometry(QtCore.QRect(250,700,51,41))
+        self.rb_speed1.setGeometry(QtCore.QRect(250,700,70,41))
         self.rb_speed1.toggled.connect(self.buttontoggled)
-
+        self.rb_speed2 = QtWidgets.QRadioButton(self.centralwidget)
+        self.rb_speed2.setGeometry(QtCore.QRect(250,760,70,41))
+        self.rb_speed2.toggled.connect(self.buttontoggled)
+        self.rb_speed2.setChecked(True)
+        self.rb_speed3 = QtWidgets.QRadioButton(self.centralwidget)
+        self.rb_speed3.setGeometry(QtCore.QRect(250,820,70,41))
+        self.rb_speed3.toggled.connect(self.buttontoggled)
 
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 1271, 671))
@@ -202,12 +192,12 @@ class Ui_MainWindow(object):
         self.mvrightButton.setText(_translate("MainWindow", "MVRIGHT"))
         self.stopButton.setText(_translate("MainWindow", "STOP"))
 
-        self.speed1.setText(_translate("MainWindow", "Speed1"))
-        self.speed1.setShortcut(_translate("MainWindow", "1"))
-        self.speed2.setText(_translate("MainWindow", "Speed2"))
-        self.speed2.setShortcut(_translate("MainWindow", "2"))
-        self.speed3.setText(_translate("MainWindow", "Speed3"))
-        self.speed3.setShortcut(_translate("MainWindow", "3"))
+        self.rb_speed1.setText(_translate("MainWindow", "Speed1"))
+        self.rb_speed1.setShortcut(_translate("MainWindow", "1"))
+        self.rb_speed2.setText(_translate("MainWindow", "Speed2"))
+        self.rb_speed2.setShortcut(_translate("MainWindow", "2"))
+        self.rb_speed3.setText(_translate("MainWindow", "Speed3"))
+        self.rb_speed3.setShortcut(_translate("MainWindow", "3"))
 
 
 
@@ -271,11 +261,18 @@ class Ui_MainWindow(object):
               self.ImageThread.resume_signal.emit()
             else:
               self.ImageThread.start()
-          elif sender.text == 'Speed1':
-              print('Speed1 toggled checked')
-              self.speed1.setChecked(True)
-              self.speed2.setChecked(False)
-              self.speed3.setChecked(False)
+          elif sender.text() == 'Speed1':
+              print('Speed1 selected')
+              self.ImageThread.setMotorSpeed(1)
+          elif sender.text() == 'Speed2':
+              print('Speed2 selected')
+              self.ImageThread.setMotorSpeed(2)
+          elif sender.text() == 'Speed3':
+              print('Speed3 selected')
+              self.ImageThread.setMotorSpeed(3)
+#              self.speed1.setChecked(True)
+#              self.speed2.setChecked(False)
+#              self.speed3.setChecked(False)
 
           self.statusBar().showMessage(sender.text() + ' is pressed')
 
