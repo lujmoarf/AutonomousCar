@@ -1,3 +1,5 @@
+
+
 void setup_motor(){
   /****************************************************************************
   // SETUP THE MOTORS
@@ -73,11 +75,11 @@ void move_forward() {
   //ledcWrite(pwmChannel, dutyCycle);
   //digitalWrite(motor2Pin1, HIGH);
   //digitalWrite(motor2Pin2, LOW);
-
+  
   forward(motor1, motor2, 150);
 
   direction = 0;
-  
+//  previousMillis = millis(); 
 //  Serial.print("forward with duty cycle: ");
 //  Serial.println(dutyCycle);
 }
@@ -96,35 +98,28 @@ void stop_motors() {
 
 void move_backward() {
   //// Move the DC motor backward
-  ////motor1
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor1Pin1, LOW);
-  //digitalWrite(motor1Pin2, HIGH);
-  
-  ////motor2
-  //ledcWrite(pwmChannel, dutyCycle);
-  //digitalWrite(motor2Pin1, LOW);
-  //digitalWrite(motor2Pin2, HIGH);  
 
   back(motor1, motor2, -150);
   direction = 1;
-  
-  //Serial.print("Backward with duty cycle: ");
-  //Serial.println(dutyCycle);
+
 }
 
 void turn_forward_left() { 
   left(motor1, motor2, 150);
+  //previousMillis = millis(); 
 }
 
 void turn_backward_left() {
   left(motor1, motor2, -150);
+  //previousMillis = millis(); 
 }
 
 void turn_forward_right() {
   right(motor1, motor2, 150);
+  //previousMillis = millis(); 
 }
 
 void turn_backward_right() {
   right(motor1, motor2, -150);
+  //previousMillis = millis(); 
 }

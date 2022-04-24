@@ -285,23 +285,23 @@ class Ui_MainWindow(object):
           self.statusBar().showMessage(sender.text() + ' is released')
    
     def keyPressEvent(self, e):
-        if e.key() == ord('D') and not e.isAutoRepeat():
+        if e.key() == ord('D'):
             self.ImageThread.requestMotorRight(True)
-        if e.key() == ord('A') and not e.isAutoRepeat():
+        if e.key() == ord('A'):
             self.ImageThread.requestMotorLeft(True)
-        if e.key() == ord('W') and not e.isAutoRepeat():
+        if e.key() == ord('W'):
             self.ImageThread.requestMotorFW(True)
-        if e.key() == ord('S') and not e.isAutoRepeat():
+        if e.key() == ord('S'):
             self.ImageThread.requestMotorBW(True)
         if e.key() == ord('Q') and not e.isAutoRepeat():
             self.ImageThread.requestMotorStop(True)
-        if e.key() == ord('L') and not e.isAutoRepeat():
+        if e.key() == ord('L'):
             self.ImageThread.requestRight(True)
-        if e.key() == ord('J') and not e.isAutoRepeat():
+        if e.key() == ord('J'):
             self.ImageThread.requestLeft(True)
-        if e.key() == ord('K') and not e.isAutoRepeat():
+        if e.key() == ord('K'):
             self.ImageThread.requestBw(True)
-        if e.key() == ord('I') and not e.isAutoRepeat():
+        if e.key() == ord('I'):
             self.ImageThread.requestFw(True)
         if e.key() == ord('T') and not e.isAutoRepeat():
             self.ImageThread.getWifiTxLevel(True)

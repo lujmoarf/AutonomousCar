@@ -33,12 +33,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define DEBUG
 // #define SAVE_IMG
 
-const char* ssid = "Juline_2.4G"; //replace with your wifi ssid
-const char* password = "JBDL1234"; //replace with your wifi password
-//holds the current upload
-//int cameraInitState = -1;
-//uint8_t* jpgBuff = new uint8_t[68123];
-//size_t   jpgLength = 0;
+const char* ssid = "Bernie"; //replace with your wifi ssid
+const char* password = "bernie0909"; //replace with your wifi password
+
+
+extern void stop_motors();
+
 //Creating UDP Listener Object. 
 WiFiUDP UDPServer;
 unsigned int UDPPort = 6868;
@@ -58,10 +58,10 @@ WebSocketsServer webSocket = WebSocketsServer(86);
 const int RECVLENGTH = 8;
 byte packetBuffer[RECVLENGTH];
 
-unsigned long previousMillis = 0;
+extern volatile unsigned long previousMillis = 0;  
 unsigned long previousMillisServo = 0;
-const unsigned long interval = 30;
-const unsigned long intervalServo = 100;
+const unsigned long interval = 250;
+const unsigned long intervalServo = 250;
 
 bool bStream = false;
 int debugCnt=0;
@@ -166,18 +166,13 @@ void recvMsg(uint8_t *data, size_t len){
     d += char(data[i]);
   }
   WebSerial.println(d);
-/*  if (d == "ON"){
-    digitalWrite(LED, HIGH);
-  }
-  if (d=="OFF"){
-    digitalWrite(LED, LOW);
-  }*/
 }
 
 
 void processData(){
   int cb = UDPServer.parsePacket();
   if (cb) {
+    digitalWrite(27, LOW);
     UDPServer.read(packetBuffer, RECVLENGTH);
     addrRemote = UDPServer.remoteIP();
     portRemote = UDPServer.remotePort();
@@ -224,34 +219,43 @@ void processData(){
     }else if(strPackage.equals("mFWon")){
       motor_stop = false;
       direction = 0;
-    }else if(strPackage.equals("mFWoff")){
-      motor_stop = true;
-      direction = 0;
+      move_forward();
+      previousMillis = millis();
     }else if(strPackage.equals("mBWon")){
       motor_stop = false;
       direction = 1;
-    }else if(strPackage.equals("mBWoff")){
-      motor_stop = true;
-      direction = 1;
+      move_backward();
+      previousMillis = millis();
     }else if(strPackage.equals("mRGon")){
       motor_stop = false;
       turn = 1;
-    }else if(strPackage.equals("mRGoff")){
-      motor_stop = true;
-      turn = 0;
+      if (direction == 0){
+        turn_forward_right();
+      } else if (direction == 1){
+        turn_backward_right();
+      } else {
+        Serial.print("Error in mRGon: recevied Direction = ");
+        Serial.print(direction);
+      }
+      previousMillis = millis();
     }else if(strPackage.equals("mLFon")){
       motor_stop = false;
       turn = 2;
-    }else if(strPackage.equals("mLFoff")){
-      motor_stop = true;
-      turn = 0;      
+      if (direction == 0){
+        turn_forward_left();
+      } else if (direction == 1){
+        turn_backward_left();
+      } else {
+        Serial.print("Error in mRGon: recevied Direction = ");
+        Serial.print(direction);
+      }      
+      previousMillis = millis();     
     }else if(strPackage.equals("stopon")){
       motor_stop = true;
-    }else if(strPackage.equals("stopoff")){
-      //motor_stop = false;
     }
   }
   memset(packetBuffer, 0, RECVLENGTH);
+  digitalWrite(27, HIGH);
 }
 
 
@@ -305,23 +309,57 @@ void setup(void) {
 
   pinMode(PIN_speedsensorleft, INPUT_PULLUP);
   attachInterrupt(PIN_speedsensorleft, isr_count_left, RISING);
+  pinMode(27, OUTPUT);
 
+  stop_motors();
+  car_status = "stop";
+  
   //WIFI INIT
-  Serial.printf("Connecting to %s\n", ssid);
+/*  Serial.printf("Connecting to %s\n", ssid);
   if (String(WiFi.SSID()) != String(ssid)) {
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
   }
 
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    digitalWrite(27, HIGH);
+    delay(250);    
+    digitalWrite(27, LOW);
     Serial.print(".");
-  }
-  // digitalWrite(LED_BUILTIN, LOW);
+    delay(250);
+  }*/
+
+  int i = 0;
+  int ii = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    if (i == 0){
+      Serial.printf("Connecting to %s\n", ssid);
+      if (String(WiFi.SSID()) != String(ssid)) {
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(ssid, password);
+      }
+      i++;
+    }
+//    digitalWrite(27, HIGH);
+    delay(250);    
+//    digitalWrite(27, LOW);
+    Serial.print(".");
+    delay(250);
+    ii++;
+    if (ii == 20){
+      i = 0;
+      ii = 0;
+      WiFi.disconnect();
+    }
+  }  
+  
+  
   Serial.println("");
   Serial.print("Connected! IP address: ");
   Serial.println(WiFi.localIP());  
 
+
+  digitalWrite(27, HIGH);
   UDPServer.begin(UDPPort); 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
@@ -336,25 +374,22 @@ void setup(void) {
   ledcSetup(2, 50, SERVO_RESOLUTION);//channel, freq, resolution
   ledcAttachPin(PIN_SERVO_PITCH, 2);// pin, channel
 
-  /**********************
-   * Move the robot
-   */
-
- //  mf(CMtoSteps(50));
- //  mb(CMtoSteps(50));
 
   /**********************
    * monitor power setup
    */
   pinMode(PIN_voltage, INPUT);
 
+  
   WebSerial.begin(&server);
   WebSerial.msgCallback(recvMsg);
 //  WebSerial.setDebugOutput(true);
-  server.begin();  
+  server.begin();
+  previousMillis = millis();
 }
 
 void loop(void) {
+//  digitalWrite(27, HIGH);
   webSocket.loop();
 //  if(clientConnected == true){
 //      Serial.println("Client connected");
@@ -364,51 +399,24 @@ void loop(void) {
     // Serial.println(jpgLength);
 //  }
 
-  int v = analogRead(PIN_voltage);
+//  int v = analogRead(PIN_voltage);
 //  Serial.print("Voltage = ");
 //  Serial.println(v);
 //  delay(500);
   
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-    processData();
-  }
-  if (currentMillis - previousMillisServo >= intervalServo) {
-    previousMillisServo = currentMillis;
-    controlServos();
-    
-    if (motor_stop == false){
-      //mf(distance);
-      if (direction == 0){
-          if (turn == 0){
-            move_forward();
-            car_status = "moving forward";
-          } else if (turn == 1){
-            turn_forward_right();
-            car_status = "turn forward right";
-          } else if (turn == 2){
-            turn_forward_left();
-            car_status = "turn forward left";
-          }
-      } else if (direction == 1){
-        if (turn == 0){
-          move_backward();
-          car_status = "moving backward";
-        } else if (turn == 1){
-          turn_backward_right();
-          car_status = "turn backward right";
-        } else if (turn == 2){
-          turn_backward_left();
-          car_status = "turn backward left";
-        }
-      }
+//  if (currentMillis - previousMillisServo >= intervalServo) {
+//    previousMillisServo = currentMillis;
+//    controlServos();
+//  }
 
-      
-      
+  if (currentMillis - previousMillis < interval) {
+    processData();
     } else {
       stop_motors();
       car_status = "stop";
+      previousMillis = currentMillis;
+      processData();
     }
 
     if (old_car_status != car_status){
@@ -416,7 +424,4 @@ void loop(void) {
       WebSerial.println(car_status);
       old_car_status = car_status;
     }
-
-    
-  }
 }

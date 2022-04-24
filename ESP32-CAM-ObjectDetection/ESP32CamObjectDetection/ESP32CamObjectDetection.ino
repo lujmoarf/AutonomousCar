@@ -177,22 +177,30 @@ void setup(void) {
   }
 
   //WIFI INIT
-  Serial.printf("Connecting to %s\n", ssid);
-  if (String(WiFi.SSID()) != String(ssid)) {
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-  }
-
+  int i = 0;
+  int ii = 0;
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    // if the LED is off turn it on and vice-versa:
-    if (ledState == LOW) {
-      ledState = HIGH;
-    } else {
-      ledState = LOW;
+    if (i == 0){
+      Serial.printf("Connecting to %s\n", ssid);
+      if (String(WiFi.SSID()) != String(ssid)) {
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(ssid, password);
+      }
+      i++;
     }
+    digitalWrite(27, HIGH);
+    delay(250);    
+    digitalWrite(27, LOW);
     Serial.print(".");
-  }
+    delay(250);
+    ii++;
+    if (ii == 20){
+      i = 0;
+      ii = 0;
+      WiFi.disconnect();
+    }
+  }  
+  
   // digitalWrite(LED_BUILTIN, LOW);
   Serial.println("");
   Serial.print("Connected! IP address: ");
@@ -217,8 +225,8 @@ void loop(void) {
   if(clientConnected == true){
     grabImage(jpgLength, jpgBuff);
     webSocket.sendBIN(camNo, jpgBuff, jpgLength);
-    // Serial.print("send img: ");
-    // Serial.println(jpgLength);
+    Serial.print("send img: ");
+    Serial.println(jpgLength);
   }
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
